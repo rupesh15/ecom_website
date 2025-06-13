@@ -106,3 +106,33 @@ module.exports = (err, req, res, next) => {
     sendErrorProd(error, req, res);
   }
 };
+
+const path = require('path');
+
+// Handle errors for API responses
+const handleApiError = (err, req, res) => {
+  const statusCode = err.statusCode || 500;
+  const status = err.status || 'error';
+
+  res.status(statusCode).json({
+    status: status,
+    message: err.message,
+  });
+};
+
+// Handle errors for non-API routes (e.g., rendering static HTML)
+const handleHtmlError = (err, req, res) => {
+  const statusCode = err.statusCode || 500;
+
+  res.status(statusCode).sendFile(path.join(__dirname, '../public/error.html'));
+};
+
+// Main error handling middleware
+module.exports = (err, req, res, next) => {
+  // Check if the request is for an API route
+  if (req.originalUrl.startsWith('/api')) {
+    handleApiError(err, req, res);
+  } else {
+    handleHtmlError(err, req, res);
+  }
+};
