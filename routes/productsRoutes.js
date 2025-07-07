@@ -14,5 +14,5 @@ router.route('/:id')
     .put(productController.updateProduct)
     .delete(productController.deleteProduct);
     
-    router.route('/:products')
+router.route('/:products')
     .get(productController.getProduct)    
