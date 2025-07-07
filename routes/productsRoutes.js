@@ -13,6 +13,6 @@ router.route('/:id')
     .get(productController.getProduct)
     .put(productController.updateProduct)
     .delete(productController.deleteProduct);
-
-router.route('/:products')
+    
+    router.route('/:products')
     .get(productController.getProduct)    
