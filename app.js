@@ -15,8 +15,8 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const viewRouter = require('./routes/viewRoutes');
 const productRouter = require('./routes/productsRoutes');
+const completionRouter = require('./routes/completionRouter');
 const cors = require('cors');
-const { OpenAI } = require('openai');
 
 const app = express();
 
@@ -81,32 +81,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// Open AI setup
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
-app.use(async (req, res, next) => {
-  try {
-    const result = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [{ role: 'user', content: 'what are the different types of role present in message' }]
-    });
-
-    // Send the response back to the client
-    res.json(result.choices[0].message);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error generating completion');
-  }
-});
 
 // 3) ROUTES
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
-app.use('/api/v1/products', productRouter);
-// app.use('/ai',completion);
+app.use('/api/v1/products', productRouter); 
+app.use('/api/v1/aiinteg',completionRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
